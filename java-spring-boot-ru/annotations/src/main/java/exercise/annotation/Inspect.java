@@ -1,7 +1,7 @@
 package exercise.annotation;
 
 // BEGIN
-public @interface Inspect() {
+public @interface Inspect {
 
 }
 // END
