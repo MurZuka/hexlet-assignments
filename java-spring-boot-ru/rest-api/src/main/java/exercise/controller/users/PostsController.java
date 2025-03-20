@@ -9,17 +9,17 @@ import exercise.Data;
 
 // BEGIN
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 public class PostsController{
     // Хранилище добавленных постов
     private List<Post> posts = Data.getPosts();
 
-    @GetMapping("/users/{id}/posts") // Список всех постов, написанных пользователем
+    @GetMapping("/api/users/{id}/posts") // Список всех постов, написанных пользователем
     public List<Post> index(@PathVariable Integer id) {
         return posts.stream().filter(p -> p.getUserId() == id).toList();
     }
 
-    @PostMapping("/users/{id}/posts") // Создание поста, привязанного к пользователю
+    @PostMapping("/api/users/{id}/posts") // Создание поста, привязанного к пользователю
     @ResponseStatus(HttpStatus.CREATED)
     public Post create(@PathVariable Integer id,
                        @RequestBody Post post) {
