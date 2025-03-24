@@ -22,13 +22,14 @@ public class PostsController{
     @PostMapping("{id}/posts") // Создание поста, привязанного к пользователю
     @ResponseStatus(HttpStatus.CREATED)
     public Post create(@PathVariable Integer id,
-                       @RequestBody String slug, String title, String body) {
-        Post post = new Post();
+                       @RequestBody Post post) {
+        //String slug, String title, String body
+        //Post post = new Post();
 
         post.setUserId(id);
-        post.setSlug(slug);
-        post.setTitle(title);
-        post.setBody(body);
+//        post.setSlug(slug);
+//        post.setTitle(title);
+//        post.setBody(body);
 
         posts.add(post);
         return post;
