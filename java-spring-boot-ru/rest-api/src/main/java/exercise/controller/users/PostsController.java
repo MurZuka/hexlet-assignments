@@ -14,22 +14,21 @@ public class PostsController{
     // Хранилище добавленных постов
     private List<Post> posts = Data.getPosts();
 
-    @GetMapping("/api/users/{id}/posts") // Список всех постов, написанных пользователем
+    @GetMapping("{id}/posts") // Список всех постов, написанных пользователем
     public List<Post> index(@PathVariable Integer id) {
         return posts.stream().filter(p -> p.getUserId() == id).toList();
     }
 
-    @PostMapping("/api/users/{id}/posts") // Создание поста, привязанного к пользователю
+    @PostMapping("{id}/posts") // Создание поста, привязанного к пользователю
     @ResponseStatus(HttpStatus.CREATED)
     public Post create(@PathVariable Integer id,
-                       @RequestBody Post post) {
-        //String slug, String title, String body
-        //Post post = new Post();
+                       @RequestBody String slug, String title, String body) {
+        Post post = new Post();
 
         post.setUserId(id);
-        //post.setSlug(slug);
-        //post.setTitle(title);
-        //post.setBody(body);
+        post.setSlug(slug);
+        post.setTitle(title);
+        post.setBody(body);
 
         posts.add(post);
         return post;
