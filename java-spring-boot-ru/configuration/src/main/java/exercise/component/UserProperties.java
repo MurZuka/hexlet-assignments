@@ -9,7 +9,7 @@ import lombok.Setter;
 import java.util.List;
 
 @Component
-@ConfigurationProperties(prefix = "users.admins")
+@ConfigurationProperties(prefix = "users")
 @Getter
 @Setter
 public class UserProperties {
