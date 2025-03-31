@@ -25,10 +25,10 @@ public class ProductsController {
     // BEGIN
     @GetMapping
     public List<Product> getByPrice (@RequestParam(defaultValue = "0") int min,
-                                               @RequestParam(defaultValue = "0") int max) {
+                                     @RequestParam(defaultValue = "0") int max) {
         List<Product> checkByPrice = productRepository.findAllByPriceBetweenOrderByPrice(min, max);
 
-        if (!(checkByPrice == null)) {
+        if (!(checkByPrice == null || checkByPrice.isEmpty())) {
             return checkByPrice;
         } else {
             return productRepository.findAll(Sort.by(Sort.Order.asc("price")));
