@@ -1,6 +1,7 @@
 package exercise.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,14 +24,14 @@ public class ProductsController {
 
     // BEGIN
     @GetMapping
-    public Optional<List<Product>> getByPrice (@RequestParam(defaultValue = "0") int min,
+    public List<Product> getByPrice (@RequestParam(defaultValue = "0") int min,
                                                @RequestParam(defaultValue = "0") int max) {
-        Optional<List<Product>> checkByPrice = productRepository.findAllByPriceBetween(min, max);
+        List<Product> checkByPrice = productRepository.findAllByPriceBetweenOrderByPrice(min, max);
 
-        if (checkByPrice.isPresent()) {
+        if (!(checkByPrice == null)) {
             return checkByPrice;
         } else {
-            return Optional.of(productRepository.findAll());
+            return productRepository.findAll(Sort.by(Sort.Order.asc("price")));
         }
     }
     // END
