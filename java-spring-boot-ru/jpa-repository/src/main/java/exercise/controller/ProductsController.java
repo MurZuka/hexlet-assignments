@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.data.domain.Sort;
 
 import java.util.List;
+import java.util.Optional;
 
 import exercise.model.Product;
 import exercise.repository.ProductRepository;
@@ -23,9 +24,10 @@ public class ProductsController {
 
     // BEGIN
     @GetMapping
-    public List<Product> getByPrice (@RequestParam long min,
-                                     @RequestParam long max) {
-        List<Product> filteredByPrice = productRepository.findAllByPriceBetween(min, max);
+    public List<Product> getByPrice (@RequestParam Long min,
+                                     @RequestParam Long max) {
+        List<Product> filteredByPrice = productRepository.findAllByPriceBetween(Optional.ofNullable(min),
+                                                                                Optional.ofNullable(max));
 
         return filteredByPrice;
     }
