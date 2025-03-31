@@ -24,8 +24,8 @@ public class ProductsController {
 
     // BEGIN
     @GetMapping
-    public List<Product> getByPrice (@RequestParam Long min,
-                                     @RequestParam Long max) {
+    public List<Product> getByPrice (@RequestParam(defaultValue = "0") long min,
+                                     @RequestParam(defaultValue = "9999999") long max) {
         List<Product> filteredByPrice = productRepository.findAllByPriceBetween(Optional.ofNullable(min),
                                                                                 Optional.ofNullable(max));
 
