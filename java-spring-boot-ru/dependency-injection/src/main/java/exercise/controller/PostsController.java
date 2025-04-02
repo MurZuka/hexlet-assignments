@@ -1,5 +1,7 @@
 package exercise.controller;
 
+import exercise.exception.ResourceNotFoundException;
+import exercise.model.Comment;
 import exercise.repository.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,8 +29,11 @@ public class PostsController {
     }
 
     @GetMapping("/{id}")
-    public Optional<Post> getPostById(@PathVariable long id) {
-        return postRepository.findById(id);
+    public Post getPostById(@PathVariable long id) {
+        Post checkPost = postRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Post with id " + id + " not found"));
+
+        return checkPost;
     }
 
     @PostMapping
@@ -42,16 +47,13 @@ public class PostsController {
     @PutMapping("/{id}")
     public Post editPost(@PathVariable long id,
                          @RequestBody Post post) {
-        Optional<Post> maybePost = postRepository.findById(id);
+        Post maybePost = postRepository.findById(id)
+                        .orElseThrow(() -> new ResourceNotFoundException("Post with id " + id + " not found"));
 
-        if (maybePost.isPresent()) {
-            Post foundPost = maybePost.get();
+        maybePost.setTitle(post.getTitle());
+        maybePost.setBody(post.getBody());
 
-            foundPost.setTitle(post.getTitle());
-            foundPost.setBody(post.getBody());
-        }
-
-        return post;
+        return maybePost;
     }
 
     @DeleteMapping("/{id}")

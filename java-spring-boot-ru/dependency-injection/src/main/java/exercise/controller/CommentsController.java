@@ -33,7 +33,10 @@ public class CommentsController {
 
     @GetMapping("/{id}")
     public Comment getCommentById (@PathVariable long id) {
-        return commentRepository.getReferenceById(id);
+        Comment checkComment = commentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Comment with id " + id + " not found"));
+
+        return checkComment;
     }
 
     @PostMapping
@@ -46,15 +49,13 @@ public class CommentsController {
 
     @PutMapping("/{id}")
     public Comment editCommentById(@PathVariable long id,
-                                   @RequestBody Comment comment) {
-        Optional<Comment> checking = Optional.of(commentRepository.getReferenceById(id));
+                                   @RequestBody Comment body) {
+        Comment checkComment = commentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Comment with id " + id + " not found"));
 
-        if (checking.isPresent()) {
-            Comment foundComment = checking.get();
-            foundComment.setBody(comment.getBody());
-        }
+        checkComment.setBody(body.getBody());
 
-        return comment;
+        return checkComment;
     }
 
     @DeleteMapping("/{id}")
