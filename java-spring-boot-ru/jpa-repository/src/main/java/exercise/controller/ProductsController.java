@@ -27,7 +27,7 @@ public class ProductsController {
     public List<Product> getByPrice (@RequestParam(defaultValue = "0") int min,
                                      @RequestParam(defaultValue = "0") int max) {
         if (Optional.of(min).isEmpty() && Optional.of(max).isEmpty()) {
-            return productRepository.findAll(Sort.by(Sort.Order.asc("price")));
+            return productRepository.findAll();
         } else {
             return productRepository.findAllByPriceBetweenOrderByPrice(Optional.of(min), Optional.of(max));
         }
