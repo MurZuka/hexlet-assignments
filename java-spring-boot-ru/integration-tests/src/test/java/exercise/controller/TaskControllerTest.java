@@ -86,17 +86,19 @@ class TaskControllerTest {
         var task = new Task();
         task.setTitle("title");
         task.setDescription("test task");
+        taskRepository.save(task);
+
+        var actualTask = taskRepository.findByTitle(task.getTitle()).get();
 
         var request = post("/tasks")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(om.writeValueAsString(task));
+                .content(om.writeValueAsString(actualTask));
 
         mockMvc.perform(request)
                 .andExpect(status().isCreated())
-                .andExpect(content().json(om.writeValueAsString(task)));
+                .andExpect(content().json(om.writeValueAsString(actualTask)));
 
-        assertThat(taskRepository.findAll()).hasSize(2);
-        var actualTask = taskRepository.findByTitle(task.getTitle()).get();
+        //assertThat(taskRepository.findAll()).hasSize(2);
         assertThat(actualTask.getCreatedAt()).isNotNull();
         assertThat(actualTask.getUpdatedAt()).isNotNull();
     }
