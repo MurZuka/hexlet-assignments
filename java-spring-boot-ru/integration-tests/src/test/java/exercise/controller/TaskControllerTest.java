@@ -1,5 +1,6 @@
 package exercise.controller;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -44,6 +45,14 @@ class TaskControllerTest {
     @Autowired
     private TaskRepository taskRepository;
 
+    private Task testTask;
+
+    @BeforeEach
+    public void setUp() {
+        testTask = new Task();
+        taskRepository.save(testTask);
+    }
+
     @Test
     public void testWelcomePage() throws Exception {
         var result = mockMvc.perform(get("/"))
@@ -67,14 +76,16 @@ class TaskControllerTest {
     // BEGIN
     @Test
     public void testShow() throws Exception {
-        mockMvc.perform(get("/tasks/test-task"))
-                .andExpect(status().isOk());
+        mockMvc.perform(get("/tasks/{id}", testTask.getId()))
+                .andExpect(status().isOk())
+                .andExpect(content().json(om.writeValueAsString(testTask)));
     }
 
     @Test
     public void testCreateTask() throws Exception {
         var task = new Task();
-        task.setTitle("test-task");
+        task.setTitle("title");
+        task.setDescription("test task");
 
         var request = post("/tasks")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -83,6 +94,11 @@ class TaskControllerTest {
         mockMvc.perform(request)
                 .andExpect(status().isCreated())
                 .andExpect(content().json(om.writeValueAsString(task)));
+
+        assertThat(taskRepository.findAll()).hasSize(2);
+        var actualTask = taskRepository.findByTitle(task.getTitle()).get();
+        assertThat(actualTask.getCreatedAt()).isNotNull();
+        assertThat(actualTask.getUpdatedAt()).isNotNull();
     }
 
     @Test
@@ -105,19 +121,12 @@ class TaskControllerTest {
                 .andExpect(status().isOk());
 
         task = taskRepository.findById(task.getId()).get();
-        assertThat(task.getTitle()).isEqualTo("NewTask");
+        assertThat(task.getTitle()).isEqualTo("test-task");
     }
 
     @Test
     public void testDeleteTask() throws Exception {
-        var task = Instancio.of(Task.class)
-                .ignore(Select.field(Task::getId))
-                .supply(Select.field(Task::getTitle), () -> faker.lorem().word())
-                .create();
-
-        taskRepository.save(task);
-
-        mockMvc.perform(delete("/tasks/" + task.getId()))
+        mockMvc.perform(delete("/tasks/{id}", testTask.getId()))
                 .andExpect(status().isOk());
 
     }
