@@ -85,6 +85,7 @@ public class ProductsController {
 
     private ProductDTO toDTO(Product product) {
         var dto = new ProductDTO();
+
         dto.setId(product.getId());
         dto.setTitle(product.getTitle());
         dto.setPrice(product.getPrice());
