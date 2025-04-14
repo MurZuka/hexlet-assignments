@@ -83,9 +83,6 @@ public class TasksController {
 
         taskRepository.save(task);
 
-        System.out.println("Assignee ID FROM TaskUpdateDTO — " + taskData.getAssigneeId());
-        System.out.println("Assignee ID FROM updated Task — " + task.getAssignee().getId());
-
         TaskDTO taskDTO = taskMapper.map(task);
 
         return taskDTO;
